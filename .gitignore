@@ -1,0 +1,70 @@
+# Sensitive files - DO NOT COMMIT
+.env
+*.key
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+events.db
+corporate_actions.db
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+*.tmp
+*.bak
+*.swp
+*~
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Windows batch files (dev only)
+*.bat
+
+# Testing and development
+testing.py
+transactionpush.py
+simple_corporate_actions.py
+daily_updater.py
+
+# Migration scripts (one-time use)
+scripts/

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMIE Prowess API - Complete Workflow</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .step-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        .step-card h3 {
+            color: #495057;
+            margin-bottom: 15px;
+        }
+        .step-number {
+            background: #007bff;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="file"], input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+        }
+        button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #b6d4ea;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            color: #666;
+            border-bottom: 3px solid transparent;
+        }
+        .tab.active {
+            color: #007bff;
+            border-bottom-color: #007bff;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 CMIE Prowess API</h1>
+        <p class="subtitle">Complete workflow for CMIE Prowess data processing</p>
+        
+        <div class="workflow-steps">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Upload Batch File</h3>
+                <p>Upload your .bt file from CMIE to the Prowess API</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Process Results</h3>
+                <p>Download and parse the JSON results from CMIE</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Query Data</h3>
+                <p>Access stored data via companies, reports, and batch jobs</p>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('upload')">📤 Upload & Process</button>
+            <button class="tab" onclick="showTab('companies')">🏢 Companies</button>
+            <button class="tab" onclick="showTab('reports')">📊 Reports</button>
+            <button class="tab" onclick="showTab('jobs')">📋 Batch Jobs</button>
+            <button class="tab" onclick="showTab('health')">🏥 System</button>
+        </div>
+        
+        <!-- Upload Tab -->
+        <div id="upload" class="tab-content active">
+            <div class="form-group">
+                <label for="batchFile">📁 Select Batch File (.bt, .json):</label>
+                <input type="file" id="batchFile" accept=".bt,.json" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="format">📄 Output Format:</label>
+                <select id="format">
+                    <option value="json">JSON</option>
+                    <option value="xml">XML</option>
+                    <option value="csv">CSV</option>
+                </select>
+            </div>
+            
+            <div class="button-group">
+                <button onclick="uploadBatch()">🚀 Step 1: Upload Batch</button>
+                <button onclick="processLastBatch()" id="processBtn" disabled>⚡ Step 2: Process Results</button>
+                <button onclick="uploadAndProcess()">🎯 Upload & Process (One Step)</button>
+            </div>
+        </div>
+        
+        <!-- Companies Tab -->
+        <div id="companies" class="tab-content">
+            <div class="form-group">
+                <label for="companySearch">🔍 Search Companies:</label>
+                <input type="text" id="companySearch" placeholder="Search by name or code...">
+            </div>
+            <div class="button-group">
+                <button onclick="searchCompanies()">🔍 Search Companies</button>
+                <button onclick="getAllCompanies()">📋 Get All Companies</button>
+            </div>
+        </div>
+        
+        <!-- Reports Tab -->
+        <div id="reports" class="tab-content">
+            <div class="form-group">
+                <label for="reportCompanyCode">🏢 Company Code (optional):</label>
+                <input type="text" id="reportCompanyCode" placeholder="e.g., RELIANCE">
+            </div>
+            <div class="form-group">
+                <label for="reportDataType">📊 Data Type (optional):</label>
+                <select id="reportDataType">
+                    <option value="">All Types</option>
+                    <option value="equity_ownership">Equity Ownership</option>
+                    <option value="financial_results">Financial Results</option>
+                    <option value="balance_sheet">Balance Sheet</option>
+                    <option value="financial_ratios">Financial Ratios</option>
+                    <option value="company_info">Company Info</option>
+                    <option value="general_data">General Data</option>
+                </select>
+            </div>
+            <div class="button-group">
+                <button onclick="getReports()">📊 Get Reports</button>
+                <button onclick="getRecentReports()">🕒 Recent Reports</button>
+            </div>
+        </div>
+        
+        <!-- Batch Jobs Tab -->
+        <div id="jobs" class="tab-content">
+            <div class="button-group">
+                <button onclick="getBatchJobs()">📋 Get Batch Jobs</button>
+                <button onclick="getRecentJobs()">🕒 Recent Jobs</button>
+            </div>
+        </div>
+        
+        <!-- Health Tab -->
+        <div id="health" class="tab-content">
+            <div class="button-group">
+                <button onclick="checkHealth()">🏥 Health Check</button>
+                <button onclick="getLegacyData()">📊 Legacy Data</button>
+            </div>
+        </div>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        let currentToken = null;
+        
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        async function uploadBatch() {
+            const fileInput = document.getElementById('batchFile');
+            const formatSelect = document.getElementById('format');
+            
+            if (!fileInput.files.length) {
+                showResult('Please select a batch file to upload.', 'error');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            formData.append('fmt', formatSelect.value);
+            
+            showLoading('🚀 Step 1: Uploading batch file to CMIE Prowess API...');
+            
+            try {
+                const response = await fetch('/upload_batch', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    currentToken = result.token;
+                    document.getElementById('processBtn').disabled = false;
+                    showResult(
+                        `✅ Step 1 Complete!\n\n` +
+                        `Token: ${result.token}\n` +
+                        `Filename: ${result.filename}\n` +
+                        `Format: ${result.format}\n` +
+                        `Status: ${result.status}\n\n` +
+                        `${result.message}\n\n` +
+                        `Click "Step 2: Process Results" to download and store the data.`, 
+                        'success'
+                    );
+                } else {
+                    showResult(`❌ Upload Failed: ${result.detail || 'Unknown error'}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Network Error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function processLastBatch() {
+            if (!currentToken) {
+                showResult('❌ No batch token available. Upload a batch first.', 'error');
+                return;
+            }
+            
+            await processBatch(currentToken);
+        }
+        
+        async function processBatch(token) {
+            showLoading('⚡ Step 2: Processing batch results and storing in database...');
+            
+            try {
+                const response = await fetch(`/process_batch/${token}`, {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    let message = `✅ Step 2 Complete!\n\n` +
+                        `Token: ${result.token}\n` +
+                        `Filename: ${result.filename}\n` +
+                        `Status: ${result.status}\n` +
+                        `Rows Processed: ${result.rows_processed}\n\n` +
+                        `${result.message}`;
+                    
+                    if (result.files_info && result.files_info.length > 0) {
+                        message += `\n\nFiles Processed:\n`;
+                        result.files_info.forEach(file => {
+                            message += `• ${file.filename}: ${file.rows} rows, ${file.columns.length} columns\n`;
+                        });
+                    }
+                    
+                    showResult(message, 'success');
+                } else {
+                    showResult(`❌ Processing Failed: ${result.detail || 'Unknown error'}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Network Error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function uploadAndProcess() {
+            await uploadBatch();
+            if (currentToken) {
+                setTimeout(() => processBatch(currentToken), 1000);
+            }
+        }
+        
+        async function searchCompanies() {
+            const search = document.getElementById('companySearch').value;
+            const url = search ? `/companies?search=${encodeURIComponent(search)}` : '/companies';
+            
+            showLoading('🔍 Searching companies...');
+            
+            try {
+                const response = await fetch(url);
+                const companies = await response.json();
+                
+                if (response.ok) {
+                    if (companies.length === 0) {
+                        showResult('📭 No companies found.', 'info');
+                    } else {
+                        let table = `📊 Companies Found (${companies.length}):\n\n`;
+                        table += createTable(['Code', 'Name', 'Created'], 
+                            companies.map(c => [c.company_code, c.company_name, new Date(c.created_at).toLocaleDateString()]));
+                        showResult(table, 'success');
+                    }
+                } else {
+                    showResult('❌ Failed to fetch companies', 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Network Error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function getAllCompanies() {
+            document.getElementById('companySearch').value = '';
+            await searchCompanies();
+        }
+        
+        async function getReports() {
+            const companyCode = document.getElementById('reportCompanyCode').value;
+            const dataType = document.getElementById('reportDataType').value;
+            
+            let url = '/reports?';
+            if (companyCode) url += `company_code=${encodeURIComponent(companyCode)}&`;
+            if (dataType) url += `data_type=${encodeURIComponent(dataType)}&`;
+            url += 'limit=50';
+            
+            showLoading('📊 Fetching reports...');
+            
+            try {
+                const response = await fetch(url);
+                const reports = await response.json();
+                
+                if (response.ok) {
+                    if (reports.length === 0) {
+                        showResult('📭 No reports found with the specified criteria.', 'info');
+                    } else {
+                        let table = `📊 Reports Found (${reports.length}):\n\n`;
+                        table += createTable(['Company Code', 'Company Name', 'Data Type', 'Batch Token', 'Created'], 
+                            reports.map(r => [
+                                r.company_code || 'N/A', 
+                                r.company_name || 'N/A', 
+                                r.data_type || 'N/A',
+                                r.batch_token || 'N/A',
+                                new Date(r.created_at).toLocaleDateString()
+                            ]));
+                        showResult(table, 'success');
+                    }
+                } else {
+                    showResult('❌ Failed to fetch reports', 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Network Error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function getRecentReports() {
+            document.getElementById('reportCompanyCode').value = '';
+            document.getElementById('reportDataType').value = '';
+            await getReports();
+        }
+        
+        async function getBatchJobs() {
+            showLoading('📋 Fetching batch jobs...');
+            
+            try {
+                const response = await fetch('/batch_jobs?limit=20');
+                const jobs = await response.json();
+                
+                if (response.ok) {
+                    if (jobs.length === 0) {
+                        showResult('📭 No batch jobs found.', 'info');
+                    } else {
+                        let table = `📋 Batch Jobs (${jobs.length}):\n\n`;
+                        table += createTable(['Token', 'Filename', 'Status', 'Rows', 'Created', 'Completed'], 
+                            jobs.map(j => [
+                                j.token.substring(0, 12) + '...',
+                                j.filename,
+                                j.status,
+                                j.rows_processed || 0,
+                                new Date(j.created_at).toLocaleDateString(),
+                                j.completed_at ? new Date(j.completed_at).toLocaleDateString() : 'N/A'
+                            ]));
+                        showResult(table, 'success');
+                    }
+                } else {
+                    showResult('❌ Failed to fetch batch jobs', 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Network Error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function getRecentJobs() {
+            await getBatchJobs();
+        }
+        
+        async function checkHealth() {
+            showLoading('🏥 Checking system health...');
+            
+            try {
+                const response = await fetch('/health');
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showResult(
+                        `✅ System Health Check\n\n` +
+                        `Status: ${result.status}\n` +
+                        `Time: ${result.time}\n` +
+                        `API Key Configured: ${result.api_key_configured ? '✅ Yes' : '❌ No'}\n` +
+                        `Server: Running`, 
+                        'success'
+                    );
+                } else {
+                    showResult('❌ Health check failed', 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Network Error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function getLegacyData() {
+            showLoading('📊 Fetching legacy data...');
+            
+            try {
+                const response = await fetch('/data?limit=10');
+                const result = await response.json();
+                
+                if (response.ok) {
+                    if (result.length === 0) {
+                        showResult('📭 No legacy data found.', 'info');
+                    } else {
+                        showResult(
+                            `📊 Legacy Data (${result.length} records):\n\n${JSON.stringify(result, null, 2)}`, 
+                            'success'
+                        );
+                    }
+                } else {
+                    showResult('❌ Failed to fetch legacy data', 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Network Error: ${error.message}`, 'error');
+            }
+        }
+        
+        function createTable(headers, rows) {
+            let table = headers.join(' | ') + '\n';
+            table += headers.map(() => '---').join(' | ') + '\n';
+            rows.forEach(row => {
+                table += row.join(' | ') + '\n';
+            });
+            return table;
+        }
+        
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = message;
+            resultDiv.className = `result ${type}`;
+        }
+        
+        function showLoading(message) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <div>${message}</div>
+                </div>
+            `;
+            resultDiv.className = 'result info';
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            checkHealth();
+        });
+    </script>
+</body>
+</html>
